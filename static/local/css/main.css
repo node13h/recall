@@ -1,0 +1,75 @@
+@page {
+    margin: 1cm;
+}
+html {
+    width: 100%;
+}
+@media screen {
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-size: 11px;
+        font-family: sans-serif;
+    }
+}
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        font-size: 9px;
+        font-family: sans-serif;
+    }
+}
+.cal-container {
+    padding: 1em;
+    max-width: 100%;
+}
+.week-container {
+    margin-left: 4em;
+    position: relative;
+}
+.day {
+    width: 14.2%;
+}
+.ruler {
+    width: 3em;
+}
+.col {
+    float: left;
+}
+.col-container {
+    width: 98%;
+    position: relative;
+}
+.lining-row {
+    position: absolute;
+    width: 100%;
+    border-top: solid 0.2em #eee;
+}
+.row {
+    position: absolute;
+    width: 100%;
+}
+.day .row {
+    background-color: #E0EAF8;
+}
+.ruler .row {
+    background-color: #F8FBFE;
+}
+.row .cell {
+    border-top: solid 0.2em #BAD0EF;
+    padding: 0.1em;
+}
+.label {
+    font-size: 0.8em;
+}
+.header {
+    font-weight: bold;
+    height: 1em;
+    padding-bottom: 0.2em;
+}
+.clearfix {
+    clear: both;
+}

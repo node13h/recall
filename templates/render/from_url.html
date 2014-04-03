@@ -1,0 +1,93 @@
+{% load tz %}
+{% load staticfiles %}
+{% load dtfilters %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Rendered Week View</title>
+  <link href="{% static "local/css/main.css" %}" rel="stylesheet">
+</head>
+
+<body>
+
+  {% if form %}
+  <form method="post">
+    {% csrf_token %}
+
+    {{ form }}
+
+    <button type="submit">Submit</button>
+  </form>
+  {% endif %}
+  <div class="cal-container">
+
+    {% if weekview.week %}
+
+    {% timezone weekview.week.tz %}
+
+    <div class="ruler header col"></div>
+
+    <div class="week-container">
+
+      {% for k, day in weekview.week.days.iteritems %}
+      <div class="day header col">{{ k }}</div>
+      {% endfor %}
+
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="ruler col" style="height: {{ weekview.ruler_duration }}em;">
+      <div class="col-container">
+
+        {% for row in weekview.ruler|dictsort:'offset' %}
+        <div class="row" style="height: {{ row.duration }}em; top: {{ row.offset }}em;">
+          <div class="cell">
+            <span class="label">{{ row.label }}</span>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <div class="week-container" style="height: {{ weekview.ruler_duration }}em;">
+
+      {% for row in weekview.ruler|dictsort:'offset' %}
+      <div class="lining-row" style="height: {{ row.duration }}em; top: {{ row.offset }}em;">
+      </div>
+      {% endfor %}
+
+      {% for k, day in weekview.week.days.iteritems %}
+      <div class="day col" style="height: {{ weekview.ruler_duration }}em;">
+
+        <div class="col-container">
+
+          {% for row in day|dictsort:'offset' %}
+          <div class="row" style="width: {{ row.width }}%; left: {{ row.left }}%; height: {{ row.duration }}em; top: {{ row.offset }}em;">
+            <div class="cell">
+              <span class="label">
+                <strong>{{ row.start|time:"H:i" }}-{{ row.end|time:"H:i" }}</strong>({{ row.event.duration|timedelta_short }})</span>
+
+              {{ row.event.summary }}
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    {% endtimezone %}
+
+    {% endif %}
+
+  </div>
+</body>
+
+</html>
