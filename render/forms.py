@@ -18,7 +18,7 @@ from django import forms
 
 
 class UploadForm(forms.Form):
-    url = forms.URLField()
+    url = forms.URLField(label=u'ICAL URL')
     start_date = forms.DateField()
     timezone = forms.CharField(
         max_length=255, required=False,
