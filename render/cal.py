@@ -27,7 +27,7 @@ import icalendar
 from render.utils import to_datetime, ruler_units, adjust_duration
 
 
-class TooManyLinesException(Exception):
+class FileTooBigException(Exception):
     pass
 
 
@@ -199,7 +199,7 @@ class Week(object):
 
 
 class CalendarWeekView(object):
-    max_lines = 2048
+    max_file_size = 2 * 1024 * 1024  # 2MiB
     week = None
 
     def __init__(self):
@@ -223,11 +223,13 @@ class CalendarWeekView(object):
 
     def load_from_url(self, url, start_date, tz=None):
         lines = []
+        size = 0
         with closing(requests.get(url, stream=True)) as r:
             for i, line in enumerate(r.iter_lines()):
+                size += len(line)
+                if size > self.max_file_size:
+                    raise FileTooBigException()
                 lines.append(line)
-                if i > self.max_lines:
-                    raise TooManyLinesException()
 
             ics = icalendar.Calendar.from_ical('\n'.join(lines))
             if tz is None:
