@@ -50,7 +50,20 @@ class Rrule(object):
     def occurences(self, date):
         for o in self.rr:
             if o.date() == date:
-                yield o
+                # If range crosses DST boundary - all records will have
+                # same tzinfo. By dropping tzifo data and re-localizing
+                # result - we are ensuring correct timezone will
+                # be set for resulting datetime.
+                # Looks a bit like hack, but I did not found cleaner way
+                # to get correct results.
+                # Handling all datetimes of this object in UTC is not
+                # a solution because rrule may have rules matching weekdays
+                # and it may be Wednesday in Vilnius while it
+                # still Tuesday in UTC.
+
+                tzinfo = o.tzinfo
+                result = o.replace(tzinfo=None)
+                yield tzinfo.localize(result)
 
 
 class Event(object):
